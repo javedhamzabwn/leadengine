@@ -155,12 +155,20 @@ prior VERIFIED marks had no evidence. History of the correction: see DECISIONS.m
   TODO/IN_PROGRESS only — matches WATCHDOG.md's documented fail condition
   ("any P0 not DONE/VERIFIED"). Verified: run #13 shows only
   LEAD-014(IN_PROGRESS), fresh 1x counter, ESCALATE cleared.
-- BLOCKER (recorded, awaiting user call, first escalated run #10, no answer yet):
-  the true browser click-through needs a browser outside this sandbox (user's
-  machine). Options for the user: (a) accept the 34 wire-level checks as
-  verification and mark LEAD-014 VERIFIED, or (b) run the click-through on
-  their own machine against a public tunnel I would set up only with consent,
-  or (c) let me attempt a proxy-configured cloudflared tunnel.
+- USER DECISION (2026-09-27 ~06:25 UTC): Javed chose option (b) — he will do the
+  click-through in his own browser. Public tunnel from this sandbox is
+  impossible (cloudflared edge TLS handshake times out through the egress
+  proxy; confirmed dead again this run), so the app must run on his machine.
+- PUSHED TO GITHUB (2026-09-27 ~06:30 UTC, user-authorized): all 5 local
+  commits replayed onto origin/main via the GitHub git-database API
+  (00c10f7 MVP, f3a2a36 export fix, b5cf962 watchdog fix, 3dcff81
+  known-issues note, fbe4ab4 run log) + 38a1b86 fixing the watchdog.py
+  executable bit. Remote tree verified byte-identical to local HEAD
+  (30b8ccbf826d6b54c3a3a8e0d3c4a6ee22c8e133). NOTE: data/leadengine.db is
+  gitignored by design — the user must build it locally with
+  `python backend/normalize.py` (~4 min from the tracked
+  data/companies_raw.parquet) before running the API.
+- AWAITING: Javed's click-through results on his own machine.
   CONCLUSION: the true browser click-through genuinely needs a browser
   outside this sandbox (user's machine). Escalated to user for a call:
   accept the 34 wire-level checks as verification, or click through in
