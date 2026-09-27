@@ -36,4 +36,8 @@
   no kill-switch applies (verified 2026-09-27: feature flags, CDP permission
   grant, initiator tricks all fail). UI E2E is therefore verified via SSR
   shells + the exact API calls the frontend builds (LEAD-014 evidence).
+  Two bypass routes also failed on platform networking (2026-09-27):
+  cloudflared quick tunnels (UDP blocked; direct TCP to Cloudflare edge
+  blocked, egress is HTTP-proxy-only) and the VM LAN IP 198.19.0.2
+  (packets route out via the veth peer and never reach local listeners).
   Revisit on a machine where the browser can reach the dev servers.
