@@ -88,3 +88,23 @@ Status: Accepted
 
 ADR-007 proposed Alpine.js for MVP; the product surface (search, filters, drawer,
 selection, exports) justified Next.js/React now. Implemented with App Router.
+
+## ADR-014 — Public-tunnel browser E2E as the verification route (2026-09-27)
+Status: Accepted
+
+Every in-sandbox route to a real browser click-through was a proven dead end
+(Chromium 152 Local Network Access checks on loopback, cloudflared quick tunnels,
+LAN-IP veth route, runs #10-#13). The true click-through was instead performed in
+the user's own browser against a public localtunnel URL, and LEAD-014 was marked
+VERIFIED on that evidence (dashboard 7,438 companies, search q=software with
+debounce, facets, cursor pagination, detail drawer with unverified-data label,
+CSV export 200, signup 201 + JWT login). In-sandbox UI coverage remains the
+wire-level flow simulation (18/18) exercising the exact URLs the frontend builds.
+
+## ADR-015 — Conditional tunnel-bypass header (2026-09-27)
+Status: Accepted
+
+`frontend/lib/api.ts` sends `bypass-tunnel-reminder: 1` only when `API_BASE`
+contains `.loca.lt` (localtunnel's browser-reminder interstitial). The header is
+ignored by non-tunnel servers and is absent on every other host, so production
+behavior is unchanged. `tsc --noEmit` clean.

@@ -34,10 +34,12 @@
 - True browser click-through of localhost is blocked in this sandbox:
   Chromium 152 enforces Local Network Access navigation checks to loopback and
   no kill-switch applies (verified 2026-09-27: feature flags, CDP permission
-  grant, initiator tricks all fail). UI E2E is therefore verified via SSR
-  shells + the exact API calls the frontend builds (LEAD-014 evidence).
-  Two bypass routes also failed on platform networking (2026-09-27):
-  cloudflared quick tunnels (UDP blocked; direct TCP to Cloudflare edge
-  blocked, egress is HTTP-proxy-only) and the VM LAN IP 198.19.0.2
-  (packets route out via the veth peer and never reach local listeners).
-  Revisit on a machine where the browser can reach the dev servers.
+  grant, initiator tricks all fail). Two bypass routes also failed on platform
+  networking (2026-09-27): cloudflared quick tunnels (UDP blocked; direct TCP
+  to Cloudflare edge blocked, egress is HTTP-proxy-only) and the VM LAN IP
+  198.19.0.2 (packets route out via the veth peer and never reach local
+  listeners).
+- Resolution (2026-09-27): the public browser click-through was done in the
+  user's own browser against a public localtunnel URL (LEAD-014 VERIFIED).
+  `frontend/lib/api.ts` sends `bypass-tunnel-reminder: 1` only when `API_BASE`
+  is a `.loca.lt` host; inert on all other hosts (ADR-015).

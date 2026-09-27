@@ -322,10 +322,41 @@ prior VERIFIED marks had no evidence. History of the correction: see DECISIONS.m
     34 wire-level checks as verification, click through on their own machine,
     or authorize a proxy-configured tunnel attempt.
 
+- RUN #22 (2026-09-27 ~10:15 UTC): watchdog printed 1 ISSUE, no ESCALATE:
+  stall [seen 1x], no source change for 190m. Investigated per protocol:
+  the stall and the LEAD-014 blocker are both RESOLVED — between runs #21 and
+  #22 the user did the public click-through in their own browser against a
+  localtunnel URL and LEAD-014 was marked VERIFIED (commit 1a2792c, 12:11 PKT),
+  which also made the API's tunnel-reminder bypass header conditional on
+  `.loca.lt` hosts. The watchdog no longer flags LEAD-014 (P0 unfinished
+  counter cleared); the stall was the symptom of the old blocker, not a new
+  defect. Detect: all watchdog checks pass (DB 23.1MB / 7438 rows, 0
+  TODO/FIXME, no tracebacks, 55.3GB disk free); the leftover run #13 :3000
+  server has exited and next-env.d.ts's auto-regenerated import path was
+  reverted, leaving the tree clean. Fix/work done: closed out the mission's
+  last open item (LEAD-015) — SESSION_REPORT.md rewritten with verified-only
+  claims, git log reviewed (7 commits ahead of origin/main; 6 pushed
+  2026-09-27 ~06:30 UTC with byte-identical trees; push of 1a2792c + this
+  entry pending the user's go-ahead), secrets scan clean (only the documented
+  dev-fallback JWT secret), KNOWN_ISSUES.md verification section updated to
+  the actual outcome, ADR-014/ADR-015 recorded. Fresh evidence: pytest 56/56
+  (38s), tsc --noEmit clean, DuckDB live company 7438 / quarantine_raw 97 /
+  0 NULL lead_scores. All P0s VERIFIED/DONE; remaining TODOs are LEAD-004
+  (compliance, out of session scope) and LEAD-005 (benchmarking, deferred).
+
 ### LEAD-015: Session close-out
-- Priority: P1 · Status: **TODO**
+- Priority: P1 · Status: **VERIFIED** (2026-09-27)
 - Files: `SESSION_REPORT.md`, `KNOWN_ISSUES.md`, `DECISIONS.md` updates
 - Acceptance: report lists only verified functionality; git log reviewed; no secrets committed.
+- Evidence: SESSION_REPORT.md rewritten — verified-only claims, git state
+  reviewed (7 commits ahead of origin/main, tree clean, 6 earlier commits
+  pushed 2026-09-27 ~06:30 UTC with byte-identical trees), secrets scan run
+  (only the documented dev-fallback JWT secret; production-must-set flagged),
+  LEAD-014 public browser test recorded, tunnel-header change recorded, fresh
+  re-verification numbers (pytest 56/56, tsc clean, DuckDB 7438/97/0 NULL).
+  KNOWN_ISSUES.md verification-environment section updated to the actual
+  outcome (public tunnel click-through done; no longer "revisit later").
+  DECISIONS.md ADR-014/ADR-015 added.
 
 ## Legacy tasks (pre-2026-09-27) — corrected states
 
