@@ -71,7 +71,7 @@ def check_tasks():
         prio_m = re.search(r"Priority:\s*(P\d)", head)
         status = status_m.group(1) if status_m else "TODO"
         prio = prio_m.group(1) if prio_m else None
-        if status in ("TODO", "IN_PROGRESS", "DONE"):
+        if status in ("TODO", "IN_PROGRESS"):
             if prio == "P0":
                 p0_open.append(f"{task_id}({status})")
             elif prio == "P1":
