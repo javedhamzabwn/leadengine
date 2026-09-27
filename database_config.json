@@ -1,0 +1,31 @@
+{
+  "database": {
+    "type": "duckdb",
+    "path": "d:/wsl-data/backend/leadengine.db",
+    "parquet_path": "d:/wsl-data/Entire Apollo Database 99,311,285/data_1.parquet",
+    "supported_queries": [
+      "department filter",
+      "title filter",
+      "seniority filter",
+      "location filter",
+      "industry filter",
+      "keyword search",
+      "cursor pagination",
+      "full-text search"
+    ]
+  },
+  "connection_pool": {
+    "max_connections": 10,
+    "timeout": 30,
+    "read_only": true
+  },
+  "integration": {
+    "fastapi_endpoints": true,
+    "nextjs_frontend": true,
+    "auth_integration": "JWT via auth_service.py",
+    "cors_origins": [
+      "http://localhost:3000",
+      "http://127.0.0.1:3000"
+    ]
+  }
+}

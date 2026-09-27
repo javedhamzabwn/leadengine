@@ -1,0 +1,49 @@
+# Node
+node_modules/
+frontend/.next/
+frontend/out/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Large data dirs (gitignored, not code)
+Entire Apollo Database 99,311,285/
+Almost Full Crunchbase Database 2,807,492/
+Apollo Software Development Leads 111,582/
+Clutch.co Database 194,257/
+Company Using X Technology - 10,135,706/
+Entire Linkedin Database 434,832,484/
+Fresh Apollo Leads 1,232,352/
+Getlanka Database 24,404/
+Instagram - 843,613/
+LeadRocks Database 341,632/
+Leads - CropReach AG-AgTech/
+LinkedIn - 945,237/
+NinjaLeads Database 238,702/
+Phone Leads 321,562/
+Pitchbook 2025-06-21/
+Pitchbook 2025-09-14/
+Real Estate Agents 830K/
+Seamless Database 1,547,199/
+The Ultimate Ecommerce 7,797,171/
+USA Database Business Leads 9,979,021/

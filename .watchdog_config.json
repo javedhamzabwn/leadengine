@@ -1,0 +1,54 @@
+{
+  "project_root": "d:/wsl-data",
+  "monitored_files": [
+    "TASKS.md",
+    "backend/*.py",
+    "compliance_report.md",
+    "SOURCE_REGISTRY.md",
+    "CANONICAL_SCHEMA.md",
+    "QUERY_AST.md",
+    "BENCHMARK_SUITE.sh",
+    "profiling_report.md"
+  ],
+  "watchdog_categories": [
+    "WATCHDOG-BUILD",
+    "WATCHDOG-TEST",
+    "WATCHDOG-SECURITY",
+    "WATCHDOG-DATABASE",
+    "WATCHDOG-PERFORMANCE",
+    "WATCHDOG-DOCUMENTATION",
+    "WATCHDOG-TASKS"
+  ],
+  "recurring_checks": {
+    "EVERY_RUN": [
+      "git status",
+      "task state check",
+      "recent changes check",
+      "test health"
+    ],
+    "REGULAR_HEALTH_CHECK": [
+      "build check",
+      "tests",
+      "dependency issues",
+      "security scan",
+      "TODO/FIXME scan",
+      "architecture drift"
+    ]
+  },
+  "active_agents": [
+    "auth_service",
+    "organization_service",
+    "lead_service",
+    "search_service",
+    "data_quality_profiler",
+    "compliance_reviewer",
+    "benchmark_agent"
+  ],
+  "continuation_priority": [
+    "LEAD-001 Data Quality Profiling completion",
+    "LEAD-002 Search Implementation completion",
+    "LEAD-003 SaaS Foundation completion",
+    "LEAD-004 Compliance completion",
+    "LEAD-005 Benchmarking completion"
+  ]
+}
