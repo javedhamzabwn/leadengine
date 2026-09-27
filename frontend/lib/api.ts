@@ -223,19 +223,17 @@ export function getFacets(): Promise<Facets> {
   return request<Facets>("/api/v1/companies/facets");
 }
 
-// Export URL builder. The contract defines GET /api/v1/companies/export with
-// the same filters + format. Bulk export of selected ids passes `ids`
-// (comma-separated); if the backend does not support it yet this is the one
-// contract addition requested from the backend workstream.
+// Export URL builder for the filter-based export. The contract defines
+// GET /api/v1/companies/export with the same filters + format. Bulk export of
+// selected ids is NOT supported on the GET route (it exports by filters only);
+// use downloadExport, which POSTs {ids, format} to /api/v1/companies/export.
 export function exportUrl(
   filters: CompanyFilters,
-  format: ExportFormat,
-  ids?: string[]
+  format: ExportFormat
 ): string {
   return buildUrl("/api/v1/companies/export", {
     ...filtersToParams(filters),
     format,
-    ids: ids && ids.length > 0 ? ids.join(",") : undefined,
   });
 }
 
@@ -247,7 +245,17 @@ export async function downloadExport(
   const headers: Record<string, string> = {};
   const token = tokenProvider();
   if (token) headers["Authorization"] = `Bearer ${token}`;
-  const res = await fetch(exportUrl(filters, format, ids), { headers });
+  // Selection export: POST /api/v1/companies/export {ids, format}.
+  // (GET /api/v1/companies/export ignores ids and exports by filters, so a
+  // selection export over GET would return the wrong rows or export_too_large.)
+  const res =
+    ids && ids.length > 0
+      ? await fetch(API_BASE + "/api/v1/companies/export", {
+          method: "POST",
+          headers: { ...headers, "Content-Type": "application/json" },
+          body: JSON.stringify({ ids, format }),
+        })
+      : await fetch(exportUrl(filters, format), { headers });
   if (!res.ok) {
     const data = await res.json().catch(() => null);
     const err =

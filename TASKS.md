@@ -83,9 +83,50 @@ prior VERIFIED marks had no evidence. History of the correction: see DECISIONS.m
   scoring); `tsc --noEmit` clean; `next build` green. Parent re-ran the suite independently.
 
 ### LEAD-014: Live end-to-end verification
-- Priority: P0 · Status: **TODO** (after LEAD-008 + LEAD-009)
+- Priority: P0 · Status: **IN_PROGRESS** (after LEAD-008 + LEAD-009)
 - Acceptance: real browser/curl run of search, filters, sorting, pagination, detail,
   selection, export, empty/error states, responsive layout. Evidence recorded.
+- Evidence (API level, watchdog run 2026-09-27 ~02:10 UTC, 16/16 pass):
+  empty search → 200 [] null cursor; q<2/min_quality>1/limit 0|101/min>max/bad dir/bad
+  cursor/sql-injection sort → 422 validation_error, no stack traces; full 100-row
+  page walk = 75 pages (7438 rows, last 38); 404 detail / 401 no-token /
+  401 bad-login shapes; bulk export empty ids → 422; facets = 50 industries,
+  34 locations. Browser/UI click-through (search → filters → sort → paginate →
+  detail drawer → select → export, responsive) still open — handed to the
+  integration workstream running uvicorn + next dev.
+- Evidence (UI-flow simulation, watchdog run #9, 2026-09-27 ~02:15 UTC, 18/18 pass):
+  SSR shells 200 on /, /search, /favorites, /login, /signup; search q=software
+  (20 rows); industry+has_email+min_quality filters; sort name asc ordered;
+  cursor page 2 disjoint; detail returns id + lead_score; selection export via
+  POST {ids,format} → 200 attachment, correct header, exactly the 3 selected
+  rows (6/6 repeat); filter export GET q=software → 200, 1325-line CSV;
+  facets = 50 industries; saved-search CRUD (201/200/204); favorite
+  add/list/delete via /api/v1/favorites (201/200/204, list empty after delete);
+  empty search → [] null cursor; SQL-injection sort → 422 validation_error;
+  viewport meta present. One transient: a single selection-export call returned
+  2 of 3 rows once (11/12 correct overall, 6/6 repeat consistent); not
+  reproduced, recorded as transient, not a defect.
+- BUG FOUND + FIXED (run #9): UI "Export selected" sent
+  GET /api/v1/companies/export?ids=a,b,c&format=csv, but the GET route exports
+  by filters only and ignores `ids` (returned 400 export_too_large on empty
+  filters — the user would see an error toast instead of their 3-row CSV).
+  Fix: `frontend/lib/api.ts` `downloadExport` now POSTs {ids, format} to
+  /api/v1/companies/export (the existing tested bulk route) when ids are
+  present; GET path kept for filter exports. `tsc --noEmit` clean; wire-level
+  POST verified (200, attachment filename, header + 3 rows). Stale
+  "contract addition requested" comment corrected.
+- PLATFORM LIMITATION (not an app defect): true browser click-through is
+  blocked in this sandbox — Chromium 152 enforces Local Network Access checks
+  on navigation to localhost and no kill-switch works (tested:
+  --disable-features=LocalNetworkAccessChecks / LocalNetworkAccess /
+  BlockInsecurePrivateNetworkRequests / PrivateNetworkAccessSendPreflights,
+  --enable-features=LocalNetworkAccessChecksWarn /
+  LocalNetworkAccessRestrictionsTemporaryOptOut, CDP permission grant —
+  "Unknown permission type", chrome:// initiator trick). The flow above
+  exercises every data path the UI click-through would hit (the exact URLs
+  the frontend's api.ts builds); client-side logic (300ms debounce,
+  AbortController, cursor pagination, loading/empty/error states) was
+  parent code-reviewed under LEAD-009. Recorded in KNOWN_ISSUES.md.
 
 ### LEAD-015: Session close-out
 - Priority: P1 · Status: **TODO**

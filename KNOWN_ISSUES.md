@@ -29,3 +29,11 @@
 - Source/licensing review not done; suppression/deletion/retention workflows not built.
 - Legal review required before commercial launch.
 - LEAD-004 tracks this; out of scope for the build session.
+
+## Verification environment
+- True browser click-through of localhost is blocked in this sandbox:
+  Chromium 152 enforces Local Network Access navigation checks to loopback and
+  no kill-switch applies (verified 2026-09-27: feature flags, CDP permission
+  grant, initiator tricks all fail). UI E2E is therefore verified via SSR
+  shells + the exact API calls the frontend builds (LEAD-014 evidence).
+  Revisit on a machine where the browser can reach the dev servers.
