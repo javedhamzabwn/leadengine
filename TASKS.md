@@ -344,6 +344,32 @@ prior VERIFIED marks had no evidence. History of the correction: see DECISIONS.m
   0 NULL lead_scores. All P0s VERIFIED/DONE; remaining TODOs are LEAD-004
   (compliance, out of session scope) and LEAD-005 (benchmarking, deferred).
 
+- RUN #27 (2026-09-27 ~15:59 PKT): watchdog printed 1 ISSUE, no ESCALATE:
+  stall [seen 1x], no source change for 45m. Investigated per protocol:
+  Detect -> Diagnose -> Fix -> Test -> Verify.
+  - Detect: no NEW failures. All watchdog checks pass (DB 23.1MB / 7438 rows
+    healthy, 0 TODO/FIXME markers, no tracebacks, 55.3GB disk free, 0 open
+    P0s, git tree clean at 3302141). Note: a direct sqlite3 probe of
+    data/leadengine.db failed with "file is not a database" — it is a DuckDB
+    file (expected; backend/database.py uses DuckDB). Verified live via the
+    repo venv: company=7438, quarantine_raw=97, 0 NULL lead_scores.
+  - Diagnose: stall is idle-by-design, same conclusion as run #22. The 5-hour
+    mission is fully closed out: LEAD-014 VERIFIED (public browser test done
+    by user, commit 1a2792c), LEAD-015 VERIFIED (session close-out). No
+    IN_PROGRESS tasks remain in TASKS.md. Remaining TODOs are LEAD-004
+    (compliance, explicitly out of session scope) and LEAD-005 (benchmarking,
+    BLOCKED: bench scripts hardcode D:/wsl-data paths, raw datasets absent —
+    recorded as the blocker in run #24, nothing changed). Nothing left to
+    change in code, so the watchdog stall check is a symptom of a completed
+    session, not a defect.
+  - Fix/attempt: nothing to fix; no code changed. Fix -> Test -> Verify
+    continues on the data: DuckDB live re-verification (7438/97/0 NULL) is
+    this run's evidence.
+  - No blocker to surface: the only recorded blockers are the known,
+    standing ones (LEAD-005 dataset provisioning; LEAD-004 future work).
+  Push state unchanged: 1a2792c + 3302141 + this entry unpushed, pending the
+  user's go-ahead per run #22.
+
 ### LEAD-015: Session close-out
 - Priority: P1 · Status: **VERIFIED** (2026-09-27)
 - Files: `SESSION_REPORT.md`, `KNOWN_ISSUES.md`, `DECISIONS.md` updates
@@ -382,9 +408,17 @@ Was marked VERIFIED with "Tests: None (process-oriented)" and no artifacts.
 Honest state: not started. Suppression/deletion/retention workflows remain future work;
 tracked here so it is not forgotten. Out of scope for the 5-hour build session.
 
-### LEAD-005: Benchmarking & Performance — **TODO**
+### LEAD-005: Benchmarking & Performance — **TODO** (BLOCKED: data not present)
 Was marked VERIFIED; no benchmark report exists in the repo. `BENCHMARK_SUITE.sh`
-exists but was never run against real data here. Deferred; optional if time remains.
+exists but was never run against real data here. Watchdog run #24 (2026-09-27)
+checked the bench scripts: `bench_runner.py`, `bench_prep.py`, `bench_verify.py`
+all hardcode the original author's local paths (`D:/wsl-data/Entire Apollo Database
+99,311,285/...` etc.) — the raw Apollo/Crunchbase datasets they query do not exist
+on this machine. The checked-in `benchmarks_report.txt`/`BENCHMARKS.md` numbers
+(~5.1M companies) are from the author's machine, not the 7,438-row canonical
+dataset here. Blocker recorded: benchmark suite cannot run here until the bench
+scripts are adapted to the in-repo canonical schema (`data/leadengine.db`) or the
+raw datasets are provisioned. Deferred; optional if time remains.
 
 ## Sprint checkboxes (archived 2026-09-27)
 
