@@ -54,3 +54,37 @@ Keep Alpine.js for MVP. Move to Next.js/React when product surface and client st
 Status: Proposed
 
 Use S3/R2-style object storage for raw/archive/backup/ETL inputs, not as the primary interactive query layer.
+
+## ADR-009 — TASKS.md honesty reset (2026-09-27)
+Status: Accepted
+
+The pre-existing TASKS.md marked LEAD-001..005 VERIFIED with no evidence while its own
+checkboxes were unchecked. Rewrote the tracker with a ledger rule: DONE = implemented,
+VERIFIED = named evidence. Legacy entries corrected to honest states rather than deleted.
+
+## ADR-010 — Standard JWT via stdlib (2026-09-27)
+Status: Accepted
+
+Replaced the nonstandard hex token format and eval()-based payload parsing with a
+standard base64url(header).base64url(payload).HMAC-SHA256 JWT implemented in stdlib
+(json/base64/hmac/hashlib). No new dependency; format is interoperable and inspectable.
+
+## ADR-011 — Bad-id rows quarantined, not repaired (2026-09-27)
+Status: Accepted
+
+81 company rows whose ids failed UUID validation (reconstruction fragments: sentences
+and comma-joined field shards) were moved to quarantine_raw with reason
+bad_id_reconstruction_fragment. None had name+domain+email; all were unrecoverable as
+companies. Raw data preserved in quarantine; company count is now 7438.
+
+## ADR-012 — No-login collections for MVP (2026-09-27)
+Status: Accepted
+
+Saved searches and favorites require no authentication in the MVP (single-tenant local
+product). Revisit with tenant isolation before SaaS launch.
+
+## ADR-013 — Next.js replaces Alpine.js for MVP (2026-09-27)
+Status: Accepted
+
+ADR-007 proposed Alpine.js for MVP; the product surface (search, filters, drawer,
+selection, exports) justified Next.js/React now. Implemented with App Router.

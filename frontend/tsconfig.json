@@ -17,7 +17,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": [
-        "/*"
+        "./*"
       ]
     },
     "allowJs": true,
@@ -31,7 +31,10 @@
     ]
   },
   "include": [
-    "frontend/**/*",
+    "app/**/*",
+    "lib/**/*",
+    "components/**/*",
+    "next-env.d.ts",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts"
   ],

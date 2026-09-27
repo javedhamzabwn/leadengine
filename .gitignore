@@ -1,3 +1,13 @@
+# Python venv (local only)
+.venv/
+
+# Built databases (rebuilt from raw parquet via backend/normalize.py)
+data/*.db
+data/*.db.wal
+
+# Watchdog runtime state
+data/watchdog_state.json
+
 # Node
 node_modules/
 frontend/.next/
@@ -46,4 +56,6 @@ Pitchbook 2025-09-14/
 Real Estate Agents 830K/
 Seamless Database 1,547,199/
 The Ultimate Ecommerce 7,797,171/
-USA Database Business Leads 9,979,021/
+USA Database Business Leads 9,979,021/frontend/tsconfig.tsbuildinfo
+
+frontend/tsconfig.tsbuildinfo
