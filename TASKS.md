@@ -165,6 +165,146 @@ prior VERIFIED marks had no evidence. History of the correction: see DECISIONS.m
   outside this sandbox (user's machine). Escalated to user for a call:
   accept the 34 wire-level checks as verification, or click through in
   their own browser.
+- RUN #16 (2026-09-27 ~03:09 UTC): watchdog ESCALATE printed (counter now 4x
+  "P0 unfinished: LEAD-014(IN_PROGRESS)"). Investigated per the escalation
+  protocol: no new failures — same recorded blocker as first escalated in
+  run #10, still no user answer. Re-examined the browser route space once
+  more: every in-sandbox route stays a proven dead end (Chromium 152 LNA
+  flag matrix, cloudflared quick tunnels, LAN-IP veth route, fresh-server
+  plain-navigation probe run #13); the only remaining route is a public
+  tunnel so the user's own Chrome can load the UI, which is outward-facing
+  and needs the user's explicit consent — NOT attempted. Re-trying dead
+  ends is prohibited. No code changed; nothing to fix. Blocker re-surfaced
+  in the handoff (check + evidence + what is needed): LEAD-014's true
+  browser click-through awaits the user's call — accept the 34 wire-level
+  checks as verification, click through on their own machine, or authorize
+  a proxy-configured tunnel attempt.
+- RUN #15 (2026-09-27 ~02:59 UTC): watchdog ESCALATE printed (counter 3x
+  "P0 unfinished: LEAD-014(IN_PROGRESS)"). Investigated: no new failures —
+  same recorded blocker, no user answer yet since first escalation (run #10).
+  No new browser route exists; cloudflared tunnels and LAN-IP route both
+  proven dead ends (documented); outward-facing tunnel needs user consent,
+  not attempted. Re-trying failed approaches prohibited. Blocker surfaced
+  in handoff (repeat of run #10 escalation, awaiting the user's call:
+  accept the 34 wire-level checks as LEAD-014 verification, or click
+  through on their own machine). No code changed; nothing to fix.
+- RUN #14 (2026-09-27 ~02:50 UTC): no new failures; LEAD-014 unchanged —
+  still IN_PROGRESS, blocked on the user's call (recorded above, no answer
+  yet). Committed the pending KNOWN_ISSUES.md bypass note (bf43240).
+  All other tasks VERIFIED/DONE; no new work attempted (no new browser
+  route exists; re-trying dead ends is prohibited).
+
+- RUN #17 (2026-09-27 ~03:19 UTC): watchdog ESCALATE printed (counter now 5x
+  "P0 unfinished: LEAD-014(IN_PROGRESS)"). Investigated per escalation protocol:
+  no new failures — clean git tree (only record-keeping commits since), 0 TODO/FIXME
+  markers, backend 56/56 suite previously green, no traceback or regression signal.
+  Same recorded blocker as first escalated in run #10: the true browser click-through
+  needs an out-of-sandbox browser and the user's call. Every in-sandbox route stays
+  a proven dead end (Chromium 152 LNA flag matrix, cloudflared quick tunnels,
+  LAN-IP veth route, fresh-server plain-navigation probe, runs #10-#13); the only
+  remaining route is an outward-facing public tunnel, which needs the user's explicit
+  consent and was NOT attempted. Re-trying dead ends is prohibited. No code changed;
+  nothing to fix. Blocker re-surfaced in the handoff (check + evidence + what is
+  needed): LEAD-014's true browser click-through awaits the user's call — accept the
+  34 wire-level checks as verification, click through on their own machine, or
+  authorize a proxy-configured tunnel attempt.
+
+- RUN #18 (2026-09-27 ~03:29 UTC): watchdog ESCALATE printed (counter now 6x
+  "P0 unfinished: LEAD-014(IN_PROGRESS)"); NEW stall check [seen 1x]: no
+  source change for 44m. Investigated both per protocol. Stall root cause:
+  nothing broken — next dev (PID since 02:44) and next-server both alive and
+  healthy, git tree clean, 0 TODO/FIXME markers, no tracebacks, db 23.1MB /
+  7438 company rows healthy; the mission is idle only because the single
+  remaining actionable item (LEAD-014 browser click-through) has been blocked
+  on the user's call since run #10 — there is no code left to change. No
+  browser tasks active (checked via browser.list_tasks: none). Same recorded
+  blocker as runs #10-#17; every in-sandbox route remains a proven dead end
+  (runs #10-#13 documented); outward-facing public tunnel still needs the
+  user's explicit consent and was NOT attempted. Re-trying dead ends is
+  prohibited. No code changed; nothing to fix. Blocker re-surfaced in the
+  handoff (check + evidence + what is needed): LEAD-014's true browser
+  click-through awaits the user's call — accept the 34 wire-level checks as
+  verification, click through on their own machine, or authorize a
+  proxy-configured tunnel attempt.
+
+- RUN #19 (2026-09-27 ~03:39 UTC): watchdog ESCALATE printed (counter now 7x
+  "P0 unfinished: LEAD-014(IN_PROGRESS)"); stall check [seen 1x]: no source
+  change for 54m. Investigated per the escalation protocol: Detect -> Diagnose
+  -> Fix -> Test -> Verify.
+  - Detect: no NEW failures. The watchdog's other checks (DB health, 0 TODO/FIXME,
+    no tracebacks in data/*.log, 61.8GB disk free, dependency drift) all pass.
+    Uvicorn :8000 is down but the API-liveness check did not fail because no
+    `data/api_expected_running` flag file exists — the backend was intentionally
+    shut down after the run #13 probe. next dev :3000 responds 200 (leftover
+    probe server, benign, healthy).
+  - Diagnose: same recorded blocker as first escalated in run #10, still no
+    user answer. The stall is idle-by-design, not breakage: git tree clean
+    (this ledger entry was the only pending change), no browser tasks active
+    (browser.list_tasks: none), db healthy (23.1MB, 7438 company rows),
+    34 wire-level checks + 56/56 pytest + tsc + next build all previously
+    verified. There is no code left to change.
+  - Fix/attempt: no new browser route exists to attempt — every in-sandbox
+    route stays a proven dead end (Chromium 152 LNA flag matrix, cloudflared
+    quick tunnels, LAN-IP veth route, fresh-server plain-navigation probe,
+    runs #10-#13); the only remaining route is an outward-facing public tunnel
+    so the user's own Chrome can load the UI, which needs the user's explicit
+    consent and was NOT attempted. Re-trying dead ends is prohibited. No
+    code changed; nothing to fix.
+  - Blocker re-surfaced in the handoff (check + evidence + what is needed):
+    LEAD-014's true browser click-through awaits the user's call — accept the
+    34 wire-level checks as verification, click through on their own machine,
+    or authorize a proxy-configured tunnel attempt.
+
+- RUN #20 (2026-09-27 ~03:55 UTC): watchdog ESCALATE printed (counter now 8x
+  "P0 unfinished: LEAD-014(IN_PROGRESS)"); stall check [seen 1x]: no source
+  change for 71m. Investigated per the escalation protocol: Detect -> Diagnose
+  -> Fix -> Test -> Verify.
+  - Detect: no NEW failures. All watchdog checks pass (DB 23.1MB / 7438 rows
+    healthy, 0 TODO/FIXME markers, no tracebacks, 61.1GB disk free, git tree
+    clean, frontend :3000 responds 200 via the leftover run #13 probe server,
+    uvicorn :8000 intentionally down with no expected-running flag so
+    API-liveness correctly did not fail).
+  - Diagnose: same recorded blocker as first escalated in run #10, still no
+    user answer. The stall is idle-by-design: there is no code left to change;
+    the single remaining actionable item is LEAD-014's true browser
+    click-through, which needs an out-of-sandbox browser and the user's call.
+  - Fix/attempt: no new browser route exists to attempt — every in-sandbox
+    route stays a proven dead end (Chromium 152 LNA flag matrix, cloudflared
+    quick tunnels, LAN-IP veth route, fresh-server plain-navigation probe,
+    runs #10-#13); the only remaining route is an outward-facing public tunnel
+    so the user's own Chrome can load the UI, which needs the user's explicit
+    consent and was NOT attempted. Re-trying dead ends is prohibited. No
+    code changed; nothing to fix.
+  - Blocker re-surfaced in the handoff (check + evidence + what is needed):
+    LEAD-014's true browser click-through awaits the user's call — accept the
+    34 wire-level checks as verification, click through on their own machine,
+    or authorize a proxy-configured tunnel attempt.
+
+- RUN #21 (2026-09-27 ~04:10 UTC): watchdog ESCALATE printed (counter now 9x
+  "P0 unfinished: LEAD-014(IN_PROGRESS)"); stall check [seen 2x]: no source
+  change for 88m. Investigated per the escalation protocol: Detect -> Diagnose
+  -> Fix -> Test -> Verify.
+  - Detect: no NEW failures. Watchdog checks pass (DB 23.1MB / 7438 rows
+    healthy, 0 TODO/FIXME markers, no tracebacks in data/*.log, 60.6GB disk
+    free, 1 open P1 unrelated, git tree has only this ledger edit uncommitted).
+    Both uvicorn :8000 and next dev :3000 are down — intentional (test
+    servers shut after probes; the leftover run #13 :3000 server has exited,
+    benign, no expected-running flag so liveness correctly did not fail).
+  - Diagnose: same recorded blocker as first escalated in run #10, still no
+    user answer. Stall is idle-by-design: no code left to change; the single
+    remaining actionable item is LEAD-014's true browser click-through,
+    which needs an out-of-sandbox browser and the user's call.
+  - Fix/attempt: no new browser route exists to attempt — every in-sandbox
+    route stays a proven dead end (Chromium 152 LNA flag matrix, cloudflared
+    quick tunnels, LAN-IP veth route, fresh-server plain-navigation probe,
+    runs #10-#13); the only remaining route is an outward-facing public tunnel
+    so the user's own Chrome can load the UI, which needs the user's explicit
+    consent and was NOT attempted. Re-trying dead ends is prohibited. No
+    code changed; nothing to fix.
+  - Blocker re-surfaced in the handoff (check + evidence + what is needed):
+    LEAD-014's true browser click-through awaits the user's call — accept the
+    34 wire-level checks as verification, click through on their own machine,
+    or authorize a proxy-configured tunnel attempt.
 
 ### LEAD-015: Session close-out
 - Priority: P1 · Status: **TODO**
