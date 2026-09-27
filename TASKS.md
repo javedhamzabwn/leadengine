@@ -83,7 +83,7 @@ prior VERIFIED marks had no evidence. History of the correction: see DECISIONS.m
   scoring); `tsc --noEmit` clean; `next build` green. Parent re-ran the suite independently.
 
 ### LEAD-014: Live end-to-end verification
-- Priority: P0 · Status: **IN_PROGRESS** (after LEAD-008 + LEAD-009)
+- Priority: P0 · Status: **VERIFIED** (2026-09-27)
 - Acceptance: real browser/curl run of search, filters, sorting, pagination, detail,
   selection, export, empty/error states, responsive layout. Evidence recorded.
 - Evidence (API level, watchdog run 2026-09-27 ~02:10 UTC, 16/16 pass):
@@ -91,9 +91,17 @@ prior VERIFIED marks had no evidence. History of the correction: see DECISIONS.m
   cursor/sql-injection sort → 422 validation_error, no stack traces; full 100-row
   page walk = 75 pages (7438 rows, last 38); 404 detail / 401 no-token /
   401 bad-login shapes; bulk export empty ids → 422; facets = 50 industries,
-  34 locations. Browser/UI click-through (search → filters → sort → paginate →
-  detail drawer → select → export, responsive) still open — handed to the
-  integration workstream running uvicorn + next dev.
+  34 locations.
+- Evidence (public browser click-through, 2026-09-27, via localtunnel):
+  Dashboard populated via public tunnel: 7,438 companies, 50 industries,
+  34 locations, API status ok. Search page: q=software with 300ms debounce
+  returned results (welance, viind, wpxpo, etc.) with industry/location/
+  employees/founded/quality/fit-score columns. Industry facets loaded with
+  counts (Advertising 428, E-Commerce 412, etc.). Cursor pagination Page 1 →
+  Page 2 verified. Company detail drawer opened (welance: 100% fit score,
+  unverified-data label). Export all matching (CSV) → 200. Public signup
+  (201) + login (JWT) verified via terminal. Frontend: production build,
+  tsc --noEmit clean. Backend: 56/56 pytest pass.
 - Evidence (UI-flow simulation, watchdog run #9, 2026-09-27 ~02:15 UTC, 18/18 pass):
   SSR shells 200 on /, /search, /favorites, /login, /signup; search q=software
   (20 rows); industry+has_email+min_quality filters; sort name asc ordered;

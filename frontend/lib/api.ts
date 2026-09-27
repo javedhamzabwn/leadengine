@@ -59,6 +59,13 @@ function buildUrl(path: string, params?: Record<string, unknown>): string {
   return url.toString();
 }
 
+// Bypass header for free tunnel services (e.g. localtunnel) that show a
+// browser reminder interstitial. Only sent when the API is behind a
+// known tunnel host; unknown headers are ignored by other servers.
+function tunnelBypassHeaders(): Record<string, string> {
+  return API_BASE.includes(".loca.lt") ? { "bypass-tunnel-reminder": "1" } : {};
+}
+
 async function request<T>(
   path: string,
   opts: {
@@ -68,7 +75,7 @@ async function request<T>(
     auth?: boolean;
   } = {}
 ): Promise<T> {
-  const headers: Record<string, string> = {};
+  const headers: Record<string, string> = { ...tunnelBypassHeaders() };
   if (opts.body !== undefined) headers["Content-Type"] = "application/json";
   if (opts.auth !== false) {
     const token = tokenProvider();
@@ -184,7 +191,7 @@ export function searchCompanies(
 }
 
 async function authedFetch<T>(url: string, signal?: AbortSignal): Promise<T> {
-  const headers: Record<string, string> = {};
+  const headers: Record<string, string> = { ...tunnelBypassHeaders() };
   const token = tokenProvider();
   if (token) headers["Authorization"] = `Bearer ${token}`;
   let res: Response;
@@ -242,7 +249,7 @@ export async function downloadExport(
   format: ExportFormat,
   ids?: string[]
 ): Promise<void> {
-  const headers: Record<string, string> = {};
+  const headers: Record<string, string> = { ...tunnelBypassHeaders() };
   const token = tokenProvider();
   if (token) headers["Authorization"] = `Bearer ${token}`;
   // Selection export: POST /api/v1/companies/export {ids, format}.
